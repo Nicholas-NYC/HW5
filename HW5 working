@@ -1,0 +1,42 @@
+detach(Household_Pulse_data)
+attach(acs2017_ny)
+use_varb <- (AGE >= 21) & (AGE <= 60) & (LABFORCE == 2) & (WKSWORK2 > 4) & (UHRSWORK >= 35) & (Hispanic == 1) & (female == 1) & ((educ_college == 1) | (educ_advdeg == 1))
+dat_use <- subset(acs2017_ny,use_varb) 
+detach()
+summary(dat_use)
+model_temp1 <- lm((INCWAGE ~ AGE + I(AGE^2) + female + AfAm + Asian ) )
+summary(model_temp1)
+require(stargazer)
+stargazer(model_temp1, type = "text")
+model_temp2 <- lm((INCWAGE ~ log(AGE) + I(AGE^2) + female + AfAm + Asian ) )
+
+stargazer(model_temp2, type = "text")
+
+
+NNobs <- length(INCWAGE)
+set.seed(12345)
+graph_obs <- (runif(NNobs) < 0.7) 
+dat_graph <-subset(dat_use,graph_obs)  
+
+plot(INCWAGE ~ jitter(AGE, factor = 2), pch = 16, col = rgb(0.5, 0.5, 0.5, alpha = 0.2), ylim = c(0,100000), data = dat_graph)
+
+
+
+to_be_predicted <- data.frame(AGE = 21:60, female = 1, AfAm = 0, Asian = 0)
+
+to_be_predicted$yhat <- predict(model_temp1, newdata = to_be_predicted)
+
+lines(yhat ~ AGE, data = to_be_predicted)
+
+summary(to_be_predicted)
+
+to_be_predicted2 <- data.frame(AGE = 21:60, female = 0, AfAm = 0, Asian = 0)
+
+to_be_predicted2$yhat <- predict(model_temp1, newdata = to_be_predicted2)
+
+lines(yhat ~ AGE, data = to_be_predicted2)
+#
+summary(to_be_predicted$yhat)
+#
+summary(to_be_predicted2$yhat)
+
