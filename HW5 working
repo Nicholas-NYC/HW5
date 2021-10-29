@@ -40,3 +40,7 @@ summary(to_be_predicted$yhat)
 #
 summary(to_be_predicted2$yhat)
 
+When viewing the plots the Max of line one was 44897 and line plot 2 was a max of 59374.  I had already wrote a complet review
+of this data somewhere but now seem not to be able to find it.  Also, lower case Age is a dirty trick. There is a distinct difference
+in the income level between the two groups men and women. 
+
